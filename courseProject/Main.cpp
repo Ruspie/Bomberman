@@ -6,8 +6,8 @@
 #include <iostream>
 
 #define CELL_HEIGTH_WIDTH 22.0
-#define PICTURE_HEIGTH 20.0
-#define PICTURE_WIDTH 17.0
+#define PICTURE_BOMBERMAN_HEIGTH 20.0
+#define PICTURE_BOMBERMAN_WIDTH 17.0
 #define dX 0.1
 #define dY 0.1
 #define START_SPEED 0.05
@@ -25,6 +25,7 @@ class Player
 	{
 	private:
 		float x, y, width, heigth;
+		float nativeTime;
 	public:
 		int frame;
 		int fire;
@@ -33,12 +34,11 @@ class Player
 		sf::Texture texture;
 		sf::Sprite sprite;
 		bool visible;
-		float nativeTime;
 		Bomb()
 		{
 		}
 
-		Bomb(sf::String F, float X, float Y, float Width, float Heigth)
+		/*Bomb(sf::String F, float X, float Y, float Width, float Heigth)
 		{
 			x = X; y = Y;
 			File = F;
@@ -50,16 +50,38 @@ class Player
 			sprite.setTextureRect(sf::IntRect(0, 30, Width, Heigth));
 			sprite.setOrigin(width / 2, heigth / 2);
 			sprite.setPosition(Y + width / 2, Y + heigth / 2);
+		}*/
+
+		void Create(sf::String F, float X, float Y, float Width, float Heigth)
+		{
+			x = X; y = Y;
+			File = F;
+			width = Width; heigth = Heigth;
+			frame = 0; visible = false; nativeTime = 0;
+			image.loadFromFile("images/" + File);
+			texture.loadFromImage(image);
+			sprite.setTexture(texture);
+			sprite.setTextureRect(sf::IntRect(0, 30, Width, Heigth));
+			sprite.setOrigin(width / 2, heigth / 2);
+			sprite.setPosition(X + width / 2, Y + heigth / 2);
 		}
 
-		void CentreBomb(float X, float Y)
+		void SetPositionBomb(float X, float Y)
 		{
 			x = X; y = Y;
 		}
 
-		void Update()
+		void Update(float time)
 		{
-			sprite.setPosition(x, y);
+			nativeTime += time;
+			if (visible == true)
+				if (nativeTime < 3)
+					sprite.setPosition(x + width / 2, y + heigth / 2);
+				else
+				{
+					visible = false;
+					nativeTime = 0;
+				}
 		}
 	};
 
@@ -70,6 +92,7 @@ private:
 public:
 	float speed = 0;
 	Bomb bomb[5];
+	int counterBomb = 0;
 	bool isMove, isSelected;
 	enum {left, rigth, up, down, stay} state;
 	sf::String File;
@@ -87,8 +110,7 @@ public:
 		state = stay;
 		for (int i = 0; i < 5; i++)
 		{
-			Bomb addBomb("bomberman_bomb_sheet.png", X, Y, 15, 15);
-			bomb[i] = addBomb;
+			bomb[i].Create("bomberman_bomb_sheet.png", X, Y, 16, 16);
 		}
 		texture.loadFromImage(image);
 		sprite.setTexture(texture);
@@ -99,6 +121,7 @@ public:
 
 	void Update(float time)
 	{
+		dx = 0; dy = 0;
 		Control(time);
 		switch (state)
 		{
@@ -119,6 +142,7 @@ public:
 		CheckCollisionWithMap(0, dy);
 		speed = 0;
 		sprite.setPosition(x + width / 2, y + heigth / 2);
+		CheckBomb();
 	}
 
 	void CheckCollisionWithMap(float Dx, float Dy)
@@ -149,7 +173,7 @@ public:
 		currentFrame += 0.005*time;
 		if (currentFrame > 3)
 			currentFrame -= 3;
-		sprite.setTextureRect(sf::IntRect(Shift, int(currentFrame) * 30, PICTURE_WIDTH, PICTURE_HEIGTH));
+		sprite.setTextureRect(sf::IntRect(Shift, int(currentFrame) * 30, PICTURE_BOMBERMAN_WIDTH, PICTURE_BOMBERMAN_HEIGTH));
 	}
 
 	void Control(float time)
@@ -180,6 +204,19 @@ public:
 		}
 	}
 
+	void CheckBomb()
+	{
+		for (int i = 0; i < 5; i++)
+		{
+			if (!(bomb[i].visible))
+			{
+				for (int j = i + 1; j < 4; j++)
+					bomb[j - 1] = bomb[j];
+			}
+		
+		}
+	}
+
 	/*float GetPlayerCoordinateX()
 	{
 		return x;
@@ -197,8 +234,9 @@ int main()
 	sf::RenderWindow windowGame(sf::VideoMode(550, 650), "Bomberman 0.1");
 	
 	sf::Clock clock;
+	sf::Time Time;
 	float currentFrame = 0;
-	int counterBomb = 0;
+	bool isSpace = false;
 	//sf::Font font;
 	//font.loadFromFile("data/Inky.ttf");
 	//font.loadFromFile("data/Brassie.ttf");
@@ -221,18 +259,15 @@ int main()
 
 	sf::Image heroImage;
 	heroImage.loadFromFile("images/bomberman2_various_sheet.png");
-	Player firstBomberman(heroImage, 25, 606, PICTURE_WIDTH, PICTURE_HEIGTH);
-
-	/*Bomb bomb[5];
-	for (int i = 0; i < 5; i++)
-	{
-		Bomb addBomb("bomberman_bomb_sheet.png", firstBomberman.GetPlayerCoordinateX(), firstBomberman.GetPlayerCoordinateY(), 15, 15);
-		bomb[i] = addBomb;
-	}*/
-	
+	Player firstBomberman(heroImage, 25, 606, PICTURE_BOMBERMAN_WIDTH, PICTURE_BOMBERMAN_HEIGTH);
+	float fullTime = 0;
 	while (windowGame.isOpen())
 	{
-		float time = clock.getElapsedTime().asMicroseconds();
+		Time = clock.getElapsedTime();
+		float time = Time.asMicroseconds();
+		float realTime = Time.asSeconds();
+		fullTime += realTime;
+		std::cout << fullTime << std::endl;
 		clock.restart();
 		time = time / 800;
 		sf::Event event;
@@ -241,17 +276,20 @@ int main()
 		{
 			if ((event.type == sf::Event::Closed) || (event.type == event.KeyPressed && event.key.code == sf::Keyboard::Escape))
 				windowGame.close();
-		}
-		/*if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
-		{
-			if (counterBomb < 5)
+			if (event.type == event.KeyPressed && event.key.code == sf::Keyboard::Space && !isSpace)
 			{
-				bomb[counterBomb].CentreBomb(firstBomberman.GetPlayerCoordinateX(), firstBomberman.GetPlayerCoordinateY());
-				bomb[counterBomb].visible = true;
-				bomb[counterBomb].Update();
-				counterBomb++;
+				if (firstBomberman.counterBomb < 5)
+				{
+					std::cout << "lol" << firstBomberman.counterBomb << std::endl;
+					firstBomberman.bomb[firstBomberman.counterBomb].visible = true;
+					firstBomberman.bomb[firstBomberman.counterBomb].SetPositionBomb(firstBomberman.sprite.getPosition().x - 15/2., firstBomberman.sprite.getPosition().y - 15/2);
+					isSpace = true;
+					firstBomberman.counterBomb++;
+				}
 			}
-		*/
+			if (event.type == event.KeyReleased && event.key.code == sf::Keyboard::Space)
+				isSpace = false;
+		}
 		firstBomberman.Update(time);
 		windowGame.clear();
 		windowGame.draw(panelSprite);
@@ -269,11 +307,12 @@ int main()
 				windowGame.draw(mapSprite);
 			}
 		}
-		/*for (int i = 0; i < 5; i++)
+		for (int i = 0; i < 5; i++)
 		{
-			if (bomb[i].visible)
-				windowGame.draw(bomb[i].sprite);
-		}*/
+			firstBomberman.bomb[i].Update(realTime);
+			if (firstBomberman.bomb[i].visible)
+				windowGame.draw(firstBomberman.bomb[i].sprite);
+		}
 		//text.setString("Bomberman");
 		//text.setPosition(firstBomberman.GetPlayerCoordinateX() - PICTURE_WIDTH, firstBomberman.GetPlayerCoordinateY() - PICTURE_HEIGTH / 2 - 5);
 		//windowGame.draw(text);
