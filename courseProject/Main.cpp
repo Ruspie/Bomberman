@@ -5,9 +5,10 @@
 #include "Map.h"
 #include <iostream>
 
-#define CELL_HEIGTH_WIDTH 22.0
+#define CELL_SIZE 22.0
 #define PICTURE_BOMBERMAN_HEIGTH 20.0
 #define PICTURE_BOMBERMAN_WIDTH 17.0
+#define PICTURE_BOMB_SIZE 16
 #define dX 0.1
 #define dY 0.1
 #define START_SPEED 0.05
@@ -232,22 +233,22 @@ public:
 	{
 		float x = bomb[number].GetPositionX(), y = bomb[number].GetPositionY();
 		y -= 100;
-		for (int i = y / CELL_HEIGTH_WIDTH; i < (y + heigth) / CELL_HEIGTH_WIDTH; i++)
-			for (int j = x / CELL_HEIGTH_WIDTH; j < (x + width) / CELL_HEIGTH_WIDTH; j++)
+		for (int i = y / CELL_SIZE; i < (y + bomb[number].GetHeigth()) / CELL_SIZE; i++)
+			for (int j = x / CELL_SIZE; j < (x + bomb[number].GetWidth()) / CELL_SIZE; j++)
 				if ((TileMap[i][j] == 'M') || (TileMap[i][j] == 'S'))
 				{
 					if (Dy > 0)
-						if (y < i * CELL_HEIGTH_WIDTH)
-							y = i * CELL_HEIGTH_WIDTH - bomb[number].GetHeigth();
+						if (y < i * CELL_SIZE)
+							y = i * CELL_SIZE - bomb[number].GetHeigth();
 					if (Dy < 0)
-						if (y < i * CELL_HEIGTH_WIDTH + CELL_HEIGTH_WIDTH - 7)
-							y = i * CELL_HEIGTH_WIDTH + CELL_HEIGTH_WIDTH - 7;
+						if (y < i * CELL_SIZE + CELL_SIZE - 7)
+							y = i * CELL_SIZE + CELL_SIZE - 7;
 					if (Dx > 0)
-						if (y - i *CELL_HEIGTH_WIDTH < CELL_HEIGTH_WIDTH - 7)
-							x = j * CELL_HEIGTH_WIDTH - bomb[number].GetWidth();
+						if (y - i *CELL_SIZE < CELL_SIZE - 7)
+							x = j * CELL_SIZE - bomb[number].GetWidth();
 					if (Dx < 0)
-						if (y - i * CELL_HEIGTH_WIDTH < CELL_HEIGTH_WIDTH - 7)
-							x = j * CELL_HEIGTH_WIDTH + CELL_HEIGTH_WIDTH;
+						if (y - i * CELL_SIZE < CELL_SIZE - 7)
+							x = j * CELL_SIZE + CELL_SIZE;
 				}
 		y += 100;
 		bomb[number].SetPosition(x, y);
@@ -256,22 +257,22 @@ public:
 	void CheckCollisionPlayerWithMap(float Dx, float Dy)
 	{
 		y -= 100;
-		for (int i = y / CELL_HEIGTH_WIDTH; i < (y + heigth) / CELL_HEIGTH_WIDTH; i++)
-			for (int j = x / CELL_HEIGTH_WIDTH; j < (x + width) / CELL_HEIGTH_WIDTH; j++)
+		for (int i = y / CELL_SIZE; i < (y + heigth) / CELL_SIZE; i++)
+			for (int j = x / CELL_SIZE; j < (x + width) / CELL_SIZE; j++)
 				if ((TileMap[i][j] == 'M') || (TileMap[i][j] == 'S'))
 				{
 					if (Dy > 0)
-						if (y < i * CELL_HEIGTH_WIDTH)
-							y = i * CELL_HEIGTH_WIDTH - heigth;
+						if (y < i * CELL_SIZE)
+							y = i * CELL_SIZE - heigth;
 					if (Dy < 0)
-						if (y < i * CELL_HEIGTH_WIDTH + CELL_HEIGTH_WIDTH - 7)
-							y = i * CELL_HEIGTH_WIDTH + CELL_HEIGTH_WIDTH - 7;
+						if (y < i * CELL_SIZE + CELL_SIZE - 7)
+							y = i * CELL_SIZE + CELL_SIZE - 7;
 					if (Dx > 0)
-						if (y - i *CELL_HEIGTH_WIDTH < CELL_HEIGTH_WIDTH - 7)
-							x = j * CELL_HEIGTH_WIDTH - width;
+						if (y - i *CELL_SIZE < CELL_SIZE - 7)
+							x = j * CELL_SIZE - width;
 					if (Dx < 0)
-						if (y - i * CELL_HEIGTH_WIDTH < CELL_HEIGTH_WIDTH - 7)
-							x = j * CELL_HEIGTH_WIDTH + CELL_HEIGTH_WIDTH;
+						if (y - i * CELL_SIZE < CELL_SIZE - 7)
+							x = j * CELL_SIZE + CELL_SIZE;
 				}
 		y += 100;
 	}
@@ -356,7 +357,7 @@ int main()
 	mapSprite.setTexture(map);
 	panelSprite.setTexture(panel);
 	panelSprite.setPosition(0, 0);
-	mapSprite.setScale(CELL_HEIGTH_WIDTH / 16, CELL_HEIGTH_WIDTH / 16); // size picture is 20x20
+	mapSprite.setScale(CELL_SIZE / 16, CELL_SIZE / 16); // size picture is 20x20
 
 	sf::Image heroImage;
 	heroImage.loadFromFile("images/bomberman2_various_sheet.png");
@@ -407,7 +408,7 @@ int main()
 					mapSprite.setTextureRect(sf::IntRect(58, 0, 16, 16));
 				if (TileMap[i][j] == ' ')
 					mapSprite.setTextureRect(sf::IntRect(0, 0, 16, 16));
-				mapSprite.setPosition(j * CELL_HEIGTH_WIDTH, i * CELL_HEIGTH_WIDTH + 100);
+				mapSprite.setPosition(j * CELL_SIZE, i * CELL_SIZE + 100);
 				windowGame.draw(mapSprite);
 			}
 		}
