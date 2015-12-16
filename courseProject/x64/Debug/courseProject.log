@@ -1,0 +1,11 @@
+﻿Сборка начата 16.12.2015 22:35:20.
+     1>Проект "D:\книги\ЯП\course project\Bomberman\courseProject\courseProject.vcxproj" в узле 2 (целевые объекты Build).
+     1>Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"D:\книги\ЯП\course project\Bomberman\x64\Debug\courseProject.exe" /INCREMENTAL /NOLOGO /LIBPATH:"C:\SFML-2.3.2\lib" "sfml-graphics-d.lib" "sfml-window-d.lib" "sfml-system-d.lib" "sfml-audio-d.lib" /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /Debug /PDB:"D:\книги\ЯП\course project\Bomberman\x64\Debug\courseProject.pdb" /ASSEMBLYDEBUG /TLBID:1 /DYNAMICBASE /FIXED:NO /NXCOMPAT /MACHINE:X64 x64\Debug\Main.obj
+         "x64\Debug\.NETFramework,Version=v4.5.2.AssemblyAttributes.obj"
+     1>sfml-graphics-d.lib(sfml-graphics-d-2.dll) : fatal error LNK1112: Єшя ъюья№■ЄхЁр ьюфєы  "X86" яЁюЄштюЁхўшЄ Єшяє Ўхыхтюую ъюья№■ЄхЁр "x64"
+     1>Сборка проекта "D:\книги\ЯП\course project\Bomberman\courseProject\courseProject.vcxproj" завершена (целевые объекты Build) с ошибкой.
+
+Ошибка сборки.
+
+Затраченное время: 00:00:00.34
