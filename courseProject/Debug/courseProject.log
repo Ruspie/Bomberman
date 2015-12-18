@@ -1,31 +1,28 @@
-﻿Сборка начата 17.12.2015 2:15:54.
+﻿Сборка начата 17.12.2015 23:31:19.
      1>Проект "D:\книги\ЯП\course project\Bomberman\courseProject\courseProject.vcxproj" в узле 2 (целевые объекты Build).
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\CL.exe /c /I"C:\SFML-2.3.2\include" /AI"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\\" /AI"C:\Program Files (x86)\Windows Kits\8.1\References\CommonConfiguration\Neutral" /AI"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\\" /Zi /clr /nologo /W3 /WX- /Od /Oy- /D SFML_DYNAMIC /D WIN32 /D _DEBUG /D _UNICODE /D UNICODE /EHa /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\" /Fd"Debug\vc140.pdb" /TP /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\mscorlib.dll" /analyze- /errorReport:prompt /clr:nostdlib Main.cpp
          Main.cpp
-     1>Main.cpp(53): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
-     1>Main.cpp(127): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
-     1>Main.cpp(236): warning C4244: инициализация: преобразование "double" в "int", возможна потеря данных
-     1>Main.cpp(237): warning C4244: инициализация: преобразование "double" в "int", возможна потеря данных
-     1>Main.cpp(242): warning C4244: =: преобразование "double" в "float", возможна потеря данных
-     1>Main.cpp(245): warning C4244: =: преобразование "double" в "float", возможна потеря данных
-     1>Main.cpp(248): warning C4244: =: преобразование "double" в "float", возможна потеря данных
-     1>Main.cpp(251): warning C4244: =: преобразование "double" в "float", возможна потеря данных
-     1>Main.cpp(260): warning C4244: инициализация: преобразование "double" в "int", возможна потеря данных
-     1>Main.cpp(261): warning C4244: инициализация: преобразование "double" в "int", возможна потеря данных
-     1>Main.cpp(266): warning C4244: =: преобразование "double" в "float", возможна потеря данных
-     1>Main.cpp(269): warning C4244: =: преобразование "double" в "float", возможна потеря данных
-     1>Main.cpp(272): warning C4244: =: преобразование "double" в "float", возможна потеря данных
-     1>Main.cpp(275): warning C4244: =: преобразование "double" в "float", возможна потеря данных
+     1>d:\книги\яп\course project\bomberman\courseproject\Map.h(117): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
+     1>Main.cpp(54): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
+     1>Main.cpp(128): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
+     1>Main.cpp(239): warning C4244: инициализация: преобразование "double" в "int", возможна потеря данных
+     1>Main.cpp(240): warning C4244: инициализация: преобразование "double" в "int", возможна потеря данных
+     1>Main.cpp(246): warning C4244: =: преобразование "double" в "float", возможна потеря данных
+     1>Main.cpp(249): warning C4244: =: преобразование "double" в "float", возможна потеря данных
+     1>Main.cpp(252): warning C4244: =: преобразование "double" в "float", возможна потеря данных
+     1>Main.cpp(255): warning C4244: =: преобразование "double" в "float", возможна потеря данных
      1>Main.cpp(282): warning C4244: +=: преобразование "double" в "float", возможна потеря данных
      1>Main.cpp(285): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
-     1>Main.cpp(293): warning C4305: =: усечение из "double" к "float"
-     1>Main.cpp(299): warning C4305: =: усечение из "double" к "float"
-     1>Main.cpp(305): warning C4305: =: усечение из "double" к "float"
-     1>Main.cpp(311): warning C4305: =: усечение из "double" к "float"
-     1>Main.cpp(369): warning C4244: инициализация: преобразование "sf::Int64" в "float", возможна потеря данных
-     1>Main.cpp(389): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
-     1>Main.cpp(411): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+     1>Main.cpp(293): warning C4244: =: преобразование "double" в "float", возможна потеря данных
+     1>Main.cpp(299): warning C4244: =: преобразование "double" в "float", возможна потеря данных
+     1>Main.cpp(305): warning C4244: =: преобразование "double" в "float", возможна потеря данных
+     1>Main.cpp(311): warning C4244: =: преобразование "double" в "float", возможна потеря данных
+     1>Main.cpp(371): warning C4244: инициализация: преобразование "sf::Int64" в "float", возможна потеря данных
+     1>Main.cpp(399): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+     1>Main.cpp(400): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+     1>Main.cpp(402): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+     1>Main.cpp(431): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\книги\ЯП\course project\Bomberman\Debug\courseProject.exe" /INCREMENTAL /NOLOGO /LIBPATH:"C:\SFML-2.3.2\lib" "sfml-graphics-d.lib" "sfml-window-d.lib" "sfml-system-d.lib" "sfml-audio-d.lib" /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /Debug /PDB:"D:\книги\ЯП\course project\Bomberman\Debug\courseProject.pdb" /ASSEMBLYDEBUG /TLBID:1 /DYNAMICBASE /FIXED:NO /NXCOMPAT /MACHINE:X86 Debug\Main.obj
          "Debug\.NETFramework,Version=v4.5.2.AssemblyAttributes.obj"
@@ -34,4 +31,4 @@
 
 Сборка успешно завершена.
 
-Затраченное время: 00:00:04.99
+Затраченное время: 00:00:01.52
