@@ -18,15 +18,15 @@
 #define UP_KEY 2
 #define DOWN_KEY 3
 #define COUNT_CELLS 25
-
 class Player
 {
+
 	class Bomb
 	{
 
 	private:
 		float x, y, width, heigth;
-		float nativeTime;
+		float nativeTime, boomTime;
 
 	public:
 		int frame;
@@ -35,7 +35,8 @@ class Player
 		sf::Image image;
 		sf::Texture texture;
 		sf::Sprite sprite;
-		bool visible, inPlayer;
+		bool visible, inPlayer, isBoom, enabled;
+		int fireState;
 
 		Bomb()
 		{
@@ -46,8 +47,8 @@ class Player
 			x = X; y = Y;
 			File = F;
 			width = Width; heigth = Heigth;
-			frame = 0; nativeTime = 0;
-			visible = false; inPlayer = false;
+			frame = 0; nativeTime = 0; boomTime = 0; fireState = 2;
+			visible = false; inPlayer = false; isBoom = false; enabled = false;
 			image.loadFromFile("images/" + File);
 			texture.loadFromImage(image);
 			sprite.setTexture(texture);
@@ -71,7 +72,105 @@ class Player
 				else
 				{
 					visible = false;
+					isBoom = true;
 					nativeTime = 0;
+				}
+			}
+			if (isBoom)
+			{
+				int positionX = (int)(x / CELL_SIZE), positionY = (int)((y - 100) / CELL_SIZE);
+				boomTime += time;
+				if (boomTime < 1)
+				{
+					SetBoomOnMap(positionX, positionY, 'S');
+					for (int i = 0; i < fireState; i++)
+					{
+						if (TileMap[positionY][positionX + i + 1] == ' ')
+						{
+							if (i != fireState - 1)
+							{
+								if (positionX + i + 1 < HEIGHT_MAP)
+									SetBoomOnMap(positionX + i + 1, positionY, 'H');
+							}
+							else
+								if (positionX + i + 1 < HEIGHT_MAP)
+									SetBoomOnMap(positionX + i + 1, positionY, 'R');
+						}
+						else
+							break;
+					}
+					for (int i = 0; i < fireState; i++)
+					{
+						if (TileMap[positionY][positionX - i - 1] == ' ')
+						{
+							if (i != fireState - 1)
+							{
+								if (positionX - i - 1 > 0)
+									SetBoomOnMap(positionX - i - 1, positionY, 'H');
+							}
+							else
+								if (positionX - i - 1 > 0)
+								{
+									SetBoomOnMap(positionX - i - 1, positionY, 'L');
+								}
+						}
+						else
+							break;
+					}
+					for (int i = 0; i < fireState; i++)
+					{
+						if (TileMap[positionY + i + 1][positionX] == ' ')
+						{
+							if (i != fireState - 1)
+							{
+								if (positionY + i + 1 < HEIGHT_MAP)
+									SetBoomOnMap(positionX, positionY + i + 1, 'V');
+							}
+							else
+								if (positionY + i + 1 < HEIGHT_MAP)
+								{
+									SetBoomOnMap(positionX, positionY + i + 1, 'D');
+								}
+						}
+						else
+							break;
+					}
+					for (int i = 0; i < fireState; i++)
+					{
+						if (TileMap[positionY - i - 1][positionX] == ' ')
+						{
+							if (i != fireState - 1)
+							{
+								if (positionY - i - 1 > 0)
+									SetBoomOnMap(positionX, positionY - i - 1, 'V');
+							}
+							else
+								if (positionY - i - 1 < HEIGHT_MAP)
+								{
+									SetBoomOnMap(positionX, positionY - i - 1, 'U');
+								}
+						}
+						else
+							break;
+					}
+				}
+				if (boomTime > 1)
+				{
+					isBoom = false;
+					enabled = false;
+					SetBoomOnMap(positionX, positionY, ' ');
+					for (int i = 0; i < fireState; i++)
+					{
+						if (positionX + i + 1 < HEIGHT_MAP)
+							SetBoomOnMap(positionX + i + 1, positionY, ' ');
+						if (positionX - i - 1 > 0)
+							SetBoomOnMap(positionX - i - 1, positionY, ' ');
+						if (positionY + i + 1 < HEIGHT_MAP)
+							SetBoomOnMap(positionX, positionY + i + 1, ' ');
+						if (positionY - i - 1 > 0)
+							SetBoomOnMap(positionX, positionY - i - 1, ' ');
+					}
+					boomTime = 0;
 				}
 			}
 		}
@@ -95,11 +194,16 @@ class Player
 		{
 			return width;
 		}
+
+		float GetNativeTime()
+		{
+			return nativeTime;
+		}
 	};
 
 private:
-	float x, y, width, heigth, dx, dy, currentFrame;
-	int bombState, speedState, fireState;
+	float x, y, width, heigth, dx, dy, currentFrame, dieTime;
+	int bombState, speedState, fireState, colDIe;
 	bool life;
 
 public:
@@ -113,7 +217,7 @@ public:
 
 	Player(sf::Image &image, float X, float Y, float Width, float Heigth)
 	{
-		bombState = 1; speedState = 0; fireState = 1;
+		bombState = 1; speedState = 0; fireState = 2; dieTime = 0;
 		life = true;
 		width = Width; heigth = Heigth;
 		x = X; y = Y; currentFrame = 0, speed = 0;
@@ -160,6 +264,43 @@ public:
 			bomb[i].Update(realTime);
 		}
 		sprite.setPosition(x + width / 2, y + heigth / 2);
+		CheckPlayerOnFire(x, y);
+	}
+
+	void AnimationDie(int Shift, float time)
+	{
+		currentFrame += 0.005*time;
+		if (currentFrame > 3)
+			currentFrame -= 3;
+		sprite.setTextureRect(sf::IntRect(int(currentFrame) * 30, Shift, PICTURE_BOMBERMAN_WIDTH, PICTURE_BOMBERMAN_HEIGTH));
+	}
+
+	void Die(float time)
+	{
+		dieTime += time / 3;
+		if (dieTime > 3)
+			dieTime -= 3;
+		AnimationDie((int)(dieTime)* 30, time);
+	}
+
+	void CheckPlayerOnFire(float x, float y)
+	{
+		for (int i = (y - 100) / CELL_SIZE; i < (y - 100 + heigth) / CELL_SIZE; i++)
+		{
+			for (int j = x / CELL_SIZE; j < (x + width) / CELL_SIZE; j++)
+			{
+				char SymbolInMap = TileBoomMap[i][j];
+				if ((SymbolInMap == 'H') || (SymbolInMap == 'R') || (SymbolInMap == 'L') || (SymbolInMap == 'V') || (SymbolInMap == 'D') || (SymbolInMap == 'U') || (SymbolInMap == 'S'))
+				{
+					life = false;
+					currentFrame = 0;
+					break;
+				}
+			}
+			if (!life)
+				break;
+
+		}
 	}
 
 	bool CheckIntersectionPlayerAndBombX(int number)
@@ -196,7 +337,7 @@ public:
 			}
 			else
 			{
-				if (CheckIntersectionPlayerAndBombY(i) && CheckIntersectionPlayerAndBombX(i))
+				if (CheckIntersectionPlayerAndBombY(i) && CheckIntersectionPlayerAndBombX(i) && bomb[i].visible)
 				{
 					if (Dy > 0)
 					{
@@ -231,7 +372,7 @@ public:
 		}
 	}
 
-	
+
 
 	void CheckCollisionPlayerWithMap(float Dx, float Dy)
 	{
@@ -242,17 +383,17 @@ public:
 				if ((TileMap[i][j] == 'M') || (TileMap[i][j] == 'S'))
 				{
 					if (Dy > 0)
-						if ((y < i * CELL_SIZE) && ((x > j * CELL_SIZE - 3) || (x + width < (j + 1) * CELL_SIZE + 3)))
+						if ((y < i * CELL_SIZE) && ((x < (j)* CELL_SIZE + CELL_SIZE - 3) && (x + width > j * CELL_SIZE + 3)))
 							y = i * CELL_SIZE - heigth;
 					if (Dy < 0)
-						if (y < i * CELL_SIZE + CELL_SIZE - 7)
+						if ((y < i * CELL_SIZE + CELL_SIZE - 7) && ((x < (j)* CELL_SIZE + CELL_SIZE - 3) && (x + width > j * CELL_SIZE + 3)))
 							y = i * CELL_SIZE + CELL_SIZE - 7;
 					if (Dx > 0)
-						if (y - i *CELL_SIZE < CELL_SIZE - 7)
-							x = j * CELL_SIZE - width;
+						if ((y < i *CELL_SIZE + CELL_SIZE - 7) && (x < j * CELL_SIZE + CELL_SIZE - 3) && (x > j * CELL_SIZE - width + 3))
+							x = j * CELL_SIZE - width + 3;
 					if (Dx < 0)
-						if (y - i * CELL_SIZE < CELL_SIZE - 7)
-							x = j * CELL_SIZE + CELL_SIZE;
+						if ((y < i * CELL_SIZE + CELL_SIZE - 7) && (x < j * CELL_SIZE + CELL_SIZE - 3) && (x > j * CELL_SIZE - width + 3))
+							x = j * CELL_SIZE + CELL_SIZE - 3;
 				}
 				if ((TileBonusMap[i][j] == 'S') && (TileMap[i][j] != 'S'))
 				{
@@ -273,7 +414,7 @@ public:
 					TileBonusMap[i][j] = ' ';
 				}
 			}
-			 
+
 		y += 100;
 	}
 
@@ -328,6 +469,10 @@ public:
 		return fireState;
 	}
 
+	bool GetLife()
+	{
+		return life;
+	}
 };
 
 int main()
@@ -337,7 +482,7 @@ int main()
 	sf::Clock clock;
 	sf::Time Time;
 	float currentFrame = 0;
-	bool isSpace = false, inPlayer = false;
+	bool isSpace = false, inPlayer = false, boomDraw = false;
 	
 	sf::Font font;
 	//font.loadFromFile("data/Inky.ttf");
@@ -349,17 +494,23 @@ int main()
 
 	GenerateBonusMap();
 
-	sf::Image mapImage, panelImage;
+	sf::Image mapImage, panelImage, boomImage;
 	mapImage.loadFromFile("images/bomberman_tiles_sheet_add.png");
 	panelImage.loadFromFile("images/panel_state_bomberman.png");
-	sf::Texture map, panel;
+	boomImage.loadFromFile("images/bomberman_bomb_sheet.png");
+	sf::Texture map, panel, boom;
 	map.loadFromImage(mapImage);
 	panel.loadFromImage(panelImage);
-	sf::Sprite mapSprite, panelSprite;
+	boom.loadFromImage(boomImage);
+	sf::Sprite mapSprite, panelSprite, boomSprite;
 	mapSprite.setTexture(map);
 	panelSprite.setTexture(panel);
+	boomSprite.setTexture(boom);
 	panelSprite.setPosition(0, 0);
 	mapSprite.setScale(CELL_SIZE / 16, CELL_SIZE / 16); // size picture is 20x20
+	boomSprite.setScale(CELL_SIZE / 16, CELL_SIZE / 16); // size picture is 20x20
+	boomSprite.setPosition(-1000, -1000);
+
 
 	sf::Image heroImage;
 	heroImage.loadFromFile("images/bomberman2_various_sheet.png");
@@ -391,15 +542,17 @@ int main()
 							break;
 						}
 					if (!(inPlayer))
-						if (!(firstBomberman.bomb[i].visible) && !(isSpace))
+						if (!(firstBomberman.bomb[i].enabled) && !(isSpace))
 						{
 							std::cout << "lol" << i << std::endl;
 							firstBomberman.bomb[i].visible = true;
+							firstBomberman.bomb[i].enabled = true;
 							firstBomberman.bomb[i].inPlayer = true;
-							float xFloat = ((firstBomberman.sprite.getPosition().x - PICTURE_BOMBERMAN_WIDTH / 2 )/ CELL_SIZE);
+							firstBomberman.bomb[i].fireState = firstBomberman.GetFireState();
+							float xFloat = ((firstBomberman.sprite.getPosition().x - PICTURE_BOMBERMAN_WIDTH / 2) / CELL_SIZE);
 							float yFloat = ((firstBomberman.sprite.getPosition().y - 100 - PICTURE_BOMBERMAN_HEIGTH / 2) / CELL_SIZE);
 							//firstBomberman.bomb[i].SetPosition(firstBomberman.sprite.getPosition().x - 15 / 2., firstBomberman.sprite.getPosition().y - 15 / 2); // закомментировано, из-за осознания того, что бомбы не двигаются (((( бомбы ставились в произвольных местах
-							firstBomberman.bomb[i].SetPosition((xFloat - (int)xFloat < 0.5) ? (int)xFloat * CELL_SIZE : ((int)xFloat + 1) * CELL_SIZE , (yFloat - (int)yFloat < 0.5) ? (int)yFloat * CELL_SIZE + 100 : ((int)yFloat + 1) * CELL_SIZE + 100);
+							firstBomberman.bomb[i].SetPosition((xFloat - (int)xFloat < 0.5) ? (int)xFloat * CELL_SIZE : ((int)xFloat + 1) * CELL_SIZE, (yFloat - (int)yFloat < 0.5) ? (int)yFloat * CELL_SIZE + 100 : ((int)yFloat + 1) * CELL_SIZE + 100);
 							isSpace = true;
 							break;
 						}
@@ -409,13 +562,17 @@ int main()
 			if (event.type == event.KeyReleased && event.key.code == sf::Keyboard::Space)
 				isSpace = false;
 		}
-		firstBomberman.Update(time, realTime);
+		if (firstBomberman.GetLife())
+			firstBomberman.Update(time, realTime);
+		else
+			firstBomberman.Die(time);
 		windowGame.clear();
 		windowGame.draw(panelSprite);
 		for (int i = 0; i < HEIGHT_MAP; i++)
 		{
 			for (int j = 0; j < WIDTH_MAP; j++)
 			{
+				boomDraw = false;
 				if (TileMap[i][j] == 'M')
 					mapSprite.setTextureRect(sf::IntRect(28, 0, 16, 16));
 				if (TileMap[i][j] == 'S')
@@ -428,8 +585,48 @@ int main()
 					mapSprite.setTextureRect(sf::IntRect(268, 0, 16, 16));
 				if ((TileMap[i][j] == ' ') && (TileBonusMap[i][j] == 'F'))
 					mapSprite.setTextureRect(sf::IntRect(298, 0, 16, 16));
+				if ((TileBoomMap[i][j] == 'S') && (TileMap[i][j] == ' '))
+				{
+					boomSprite.setTextureRect(sf::IntRect(330, 30, 16, 16));
+					boomDraw = true;
+				}
+				if ((TileBoomMap[i][j] == 'H') && (TileMap[i][j] == ' '))
+				{
+					boomSprite.setTextureRect(sf::IntRect(360, 60, 16, 16));
+					boomDraw = true;
+				}
+				if ((TileBoomMap[i][j] == 'R') && (TileMap[i][j] == ' '))
+				{
+					boomSprite.setTextureRect(sf::IntRect(360, 30, 16, 16));
+					boomDraw = true;
+				}
+				if ((TileBoomMap[i][j] == 'V') && (TileMap[i][j] == ' '))
+				{
+					boomSprite.setTextureRect(sf::IntRect(360, 0, 16, 16));
+					boomDraw = true;
+				}
+				if ((TileBoomMap[i][j] == 'L') && (TileMap[i][j] == ' '))
+				{
+					boomSprite.setTextureRect(sf::IntRect(300, 30, 16, 16));
+					boomDraw = true;
+				}
+				if ((TileBoomMap[i][j] == 'U') && (TileMap[i][j] == ' '))
+				{
+					boomSprite.setTextureRect(sf::IntRect(330, 0, 16, 16));
+					boomDraw = true;
+				}
+				if ((TileBoomMap[i][j] == 'D') && (TileMap[i][j] == ' '))
+				{
+					boomSprite.setTextureRect(sf::IntRect(330, 60, 16, 16));
+					boomDraw = true;
+				}
 				mapSprite.setPosition(j * CELL_SIZE, i * CELL_SIZE + 100);
 				windowGame.draw(mapSprite);
+				if (boomDraw)
+				{
+					boomSprite.setPosition(j * CELL_SIZE, i * CELL_SIZE + 100);
+					windowGame.draw(boomSprite);
+				}
 			}
 		}
 		for (int i = 0; i < 5; i++)
@@ -440,7 +637,7 @@ int main()
 				lol = std::to_string(i);
 				text.setString(lol);
 				text.setPosition(firstBomberman.bomb[i].GetPositionX() + 5, firstBomberman.bomb[i].GetPositionY() - 5);
-				
+
 				windowGame.draw(firstBomberman.bomb[i].sprite);
 				windowGame.draw(text);
 			}

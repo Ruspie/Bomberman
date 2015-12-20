@@ -10,7 +10,7 @@ const int WIDTH_MAP = 25;
 sf::String TileMap[HEIGHT_MAP] = {
 	"MMMMMMMMMMMMMMMMMMMMMMMMM",
 	"M                       M",
-	"M M M M M M M M M M M M M",
+	"M       M M M M M M M M M",
 	"M                       M",
 	"M M M M M M M M M M M M M",
 	"M                       M",
@@ -36,6 +36,34 @@ sf::String TileMap[HEIGHT_MAP] = {
 };
 
 sf::String TileBonusMap[HEIGHT_MAP] = {
+	"MMMMMMMMMMMMMMMMMMMMMMMMM",
+	"M                       M",
+	"M M M M M M M M M M M M M",
+	"M                       M",
+	"M M M M M M M M M M M M M",
+	"M                       M",
+	"M M M M M M M M M M M M M",
+	"M                       M",
+	"M M M M M M M M M M M M M",
+	"M                       M",
+	"M M M M M M M M M M M M M",
+	"M                       M",
+	"M M M M M M M M M M M M M",
+	"M                       M",
+	"M M M M M M M M M M M M M",
+	"M                       M",
+	"M M M M M M M M M M M M M",
+	"M                       M",
+	"M M M M M M M M M M M M M",
+	"M                       M",
+	"M M M M M M M M M M M M M",
+	"M                       M",
+	"M M M M M M M M M M M M M",
+	"M                       M",
+	"MMMMMMMMMMMMMMMMMMMMMMMMM",
+};
+
+sf::String TileBoomMap[HEIGHT_MAP] = {
 	"MMMMMMMMMMMMMMMMMMMMMMMMM",
 	"M                       M",
 	"M M M M M M M M M M M M M",
@@ -118,4 +146,9 @@ void GenerateBonusMap()
 	SetBonusOnMap(countBombBonus, 'B');
 	SetBonusOnMap(countFireBonus, 'F');
 	SetBonusOnMap(countSpeedBonus, 'S');
+}
+
+void SetBoomOnMap(int j, int i, char Status)
+{
+	TileBoomMap[i][j] = Status;
 }
