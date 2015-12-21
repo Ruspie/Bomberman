@@ -1,0 +1,13 @@
+#define CELL_SIZE 22.0
+#define PICTURE_BOMBERMAN_HEIGTH 20.0
+#define PICTURE_BOMBERMAN_WIDTH 17.0
+#define PICTURE_BOMB_SIZE 16
+#define dX 0.1
+#define dY 0.1
+#define START_SPEED 0.05
+#define BONUS_SPEED 0.01
+#define LEFT_KEY 0
+#define RIGHT_KEY 1
+#define UP_KEY 2
+#define DOWN_KEY 3
+#define COUNT_CELLS 25
