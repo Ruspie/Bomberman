@@ -8,6 +8,7 @@
 #include "Win.h"
 #include <iostream>
 #include "Constants.h"
+#include <windows.h>
 
 class Game
 {
@@ -634,7 +635,10 @@ class Game
 
 int main()
 {
-	sf::RenderWindow windowGame(sf::VideoMode(550, 650), "Bomberman 0.1");
+	//HWND hWnd = GetConsoleWindow();
+	//ShowWindow(hWnd, SW_HIDE);
+	FreeConsole();
+	sf::RenderWindow windowGame(sf::VideoMode(550, 650), "Bomberman by.Alex Begun", sf::Style::Close | sf::Style::Titlebar);
 	
 	sf::Music fonMusic;
 	fonMusic.openFromFile("data/Bomber.ogg");

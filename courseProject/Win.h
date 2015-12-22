@@ -4,7 +4,7 @@
 
 void ShowWinner(sf::String name)
 {
-	sf::RenderWindow windowHelp(sf::VideoMode(550, 180), "You Win!");
+	sf::RenderWindow windowHelp(sf::VideoMode(550, 180), "You Win!", sf::Style::Close | sf::Style::Titlebar);
 	sf::RectangleShape rectangle(sf::Vector2f(550, 180));
 	rectangle.setFillColor(sf::Color(185, 185, 185));
 	rectangle.setPosition(0, 0);

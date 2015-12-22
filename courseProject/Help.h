@@ -4,7 +4,7 @@
 
 void ShowHelp()
 {
-	sf::RenderWindow windowHelp(sf::VideoMode(550, 340), "Help");
+	sf::RenderWindow windowHelp(sf::VideoMode(550, 340), "Help", sf::Style::Close | sf::Style::Titlebar);
 	sf::RectangleShape rectangle(sf::Vector2f(550, 340));
 	rectangle.setFillColor(sf::Color(185, 185, 185));
 	rectangle.setPosition(0, 0);
