@@ -96,7 +96,9 @@ class Game
 					for (int j = x / CELL_SIZE; j < (x + width) / CELL_SIZE; j++)
 					{
 						char SymbolInMap = TileBoomMap[i][j];
-						if ((SymbolInMap == 'H') || (SymbolInMap == 'R') || (SymbolInMap == 'L') || (SymbolInMap == 'V') || (SymbolInMap == 'D') || (SymbolInMap == 'U') || (SymbolInMap == 'S'))
+						if ((SymbolInMap == 'H') || (SymbolInMap == 'R') ||
+							(SymbolInMap == 'L') || (SymbolInMap == 'V') || 
+							(SymbolInMap == 'D') || (SymbolInMap == 'U') || (SymbolInMap == 'S'))
 						{
 							nativeTime = 3;
 							break;
@@ -352,6 +354,7 @@ class Game
 				dx = 0; dy = speed; break;
 			case stay: break;
 			}
+			speed = 0;
 			x += dx * time;
 			CheckCollisionPlayerWithMap(dx, 0);
 			CheckCollisionPlayerWithBomb(dx, 0, time);
@@ -360,7 +363,6 @@ class Game
 			CheckCollisionPlayerWithMap(0, dy);
 			CheckCollisionPlayerWithBomb(0, dy, time);
 			//CheckCollisionBombWithBomb(0, dy, time);			// закомментировано, из-за осознания того, что бомбы не двигаются ((((
-			speed = 0;
 			for (int i = 0; i < 5; i++)
 			{
 				bomb[i].Update(realTime);

@@ -6,34 +6,6 @@
 #define HEIGHT_MAP 25
 #define WIDTH_MAP 25
 
-//sf::String TileMap[HEIGHT_MAP] = {
-//	"MMMMMMMMMMMMMMMMMMMMMMMMM",
-//	"M                       M",
-//	"M M M M M M M M M M M M M",
-//	"M                       M",
-//	"M M M M M M M M M M M M M",
-//	"M                       M",
-//	"M M M M M M M M M M M M M",
-//	"M                       M",
-//	"M M M M M M M M M M M M M",
-//	"M                       M",
-//	"M M M M M M M M M M M M M",
-//	"M                       M",
-//	"M M M M M M M M M M M M M",
-//	"M                       M",
-//	"M M M M M M M M M M M M M",
-//	"M                       M",
-//	"M M M M M M M M M M M M M",
-//	"M                       M",
-//	"M M M M M M M M M M M M M",
-//	"M                       M",
-//	"M M M M M M M M M M M M M",
-//	"M                       M",
-//	"M M M M M M M M M M M M M",
-//	"M                       M",
-//	"MMMMMMMMMMMMMMMMMMMMMMMMM",
-//};
-
 sf::String TileBonusMap[HEIGHT_MAP] = {
 	"MMMMMMMMMMMMMMMMMMMMMMMMM",
 	"M                       M",
